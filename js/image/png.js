@@ -16,13 +16,13 @@
       this.obj = null;
     }
 
-    PNGImage.prototype.embed = function(document1) {
+    PNGImage.prototype.embed = function(document) {
       var k, len1, mask, palette, params, rgb, val, x;
-      this.document = document1;
+      this.document = document;
       if (this.obj) {
         return;
       }
-      this.obj = document.ref({
+      this.obj = this.document.ref({
         Type: 'XObject',
         Subtype: 'Image',
         BitsPerComponent: this.image.bits,
@@ -31,7 +31,7 @@
         Filter: 'FlateDecode'
       });
       if (!this.image.hasAlphaChannel) {
-        params = document.ref({
+        params = this.document.ref({
           Predictor: 15,
           Colors: this.image.colors,
           BitsPerComponent: this.image.bits,
@@ -43,7 +43,7 @@
       if (this.image.palette.length === 0) {
         this.obj.data['ColorSpace'] = this.image.colorSpace;
       } else {
-        palette = document.ref();
+        palette = this.document.ref();
         palette.end(new Buffer(this.image.palette));
         this.obj.data['ColorSpace'] = ['Indexed', 'DeviceRGB', (this.image.palette.length / 3) - 1, palette];
       }
